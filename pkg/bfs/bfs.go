@@ -8,16 +8,16 @@ import (
 )
 
 func BFS(grid pkg.Grid, hopper pkg.Hopper) (int, error) {
-	queue := []pkg.Hopper{hopper}
-	visited := map[point.Point]struct{}{
-		hopper.Position(): {},
-	}
-
 	if !grid.IsLegalMove(hopper.Position()) {
 		return 0, errors.New("hopper starts out of bounds")
 	}
 	if grid.IsFinish(hopper.Position()) {
 		return hopper.CurrentMovesNumber(), nil
+	}
+
+	queue := []pkg.Hopper{hopper}
+	visited := map[point.Point]struct{}{
+		hopper.Position(): {},
 	}
 
 	for len(queue) > 0 {

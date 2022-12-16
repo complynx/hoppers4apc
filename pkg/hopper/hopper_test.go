@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/complynx/hoppers4apc/pkg/point"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -17,9 +16,6 @@ type hopperTestSuite struct {
 }
 
 func (s *hopperTestSuite) TestNew() {
-	ctrl := gomock.NewController(s.T())
-	defer ctrl.Finish()
-
 	h := New(point.New(1, 2))
 	hReal, isHopper := h.(*hopper)
 
@@ -29,9 +25,6 @@ func (s *hopperTestSuite) TestNew() {
 }
 
 func (s *hopperTestSuite) TestAbs() {
-	ctrl := gomock.NewController(s.T())
-	defer ctrl.Finish()
-
 	s.Equal(1, abs(1))
 	s.Equal(4244, abs(4244))
 	s.Equal(0, abs(0))
@@ -40,9 +33,6 @@ func (s *hopperTestSuite) TestAbs() {
 }
 
 func (s *hopperTestSuite) TestPosition() {
-	ctrl := gomock.NewController(s.T())
-	defer ctrl.Finish()
-
 	h := hopper{
 		position: point.New(1, 2),
 	}
@@ -54,9 +44,6 @@ func (s *hopperTestSuite) TestPosition() {
 }
 
 func (s *hopperTestSuite) TestPossibleMoves() {
-	ctrl := gomock.NewController(s.T())
-	defer ctrl.Finish()
-
 	s.Run("stationary", func() {
 		h := hopper{
 			position: point.New(2, 4),
@@ -129,9 +116,6 @@ func (s *hopperTestSuite) TestPossibleMoves() {
 }
 
 func (s *hopperTestSuite) TestMovesCount() {
-	ctrl := gomock.NewController(s.T())
-	defer ctrl.Finish()
-
 	h := New(point.New(1, 1))
 	a := h.PossibleMoves()
 	s.Equal(0, h.CurrentMovesNumber())

@@ -1,5 +1,8 @@
 package pkg
 
+//go:generate mockery --srcpkg github.com/complynx/hoppers4apc/pkg --name=Hopper --with-expecter
+//go:generate mockery --srcpkg github.com/complynx/hoppers4apc/pkg --name=Grid --with-expecter
+
 import "github.com/complynx/hoppers4apc/pkg/point"
 
 type Hopper interface {

@@ -3,7 +3,6 @@ package point
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -16,9 +15,6 @@ type pointTestSuite struct {
 }
 
 func (s *pointTestSuite) TestPointAddition() {
-	ctrl := gomock.NewController(s.T())
-	defer ctrl.Finish()
-
 	point1 := New(1, 2)
 	point2 := New(3, 4)
 

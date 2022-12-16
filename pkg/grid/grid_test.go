@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/complynx/hoppers4apc/pkg/point"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -17,25 +16,19 @@ type gridTestSuite struct {
 }
 
 func (s *gridTestSuite) TestNew() {
-	ctrl := gomock.NewController(s.T())
-	defer ctrl.Finish()
-
 	s.Run("out of bounds", func() {
 		_, err := New(point.New(1, 2), point.New(1, 2))
 		s.EqualError(err, "finish point is outside grid boundaries provided")
 	})
 
 	s.Run("ok", func() {
-		g, err := New(point.New(1, 2), point.New(1, 2))
+		g, err := New(point.New(3, 3), point.New(1, 2))
 		s.NoError(err)
 		s.NotNil(g)
 	})
 }
 
 func (s *gridTestSuite) TestAddBlocked() {
-	ctrl := gomock.NewController(s.T())
-	defer ctrl.Finish()
-
 	s.Run("out of bounds p1", func() {
 		g := grid{
 			boundaries: point.New(3, 3),
@@ -55,6 +48,7 @@ func (s *gridTestSuite) TestAddBlocked() {
 	s.Run("ok", func() {
 		g := grid{
 			boundaries: point.New(3, 3),
+			blocked:    make(map[point.Point]struct{}),
 		}
 		err := g.AddBlocked(point.New(1, 1), point.New(1, 1))
 		s.NoError(err)
@@ -65,8 +59,31 @@ func (s *gridTestSuite) TestAddBlocked() {
 	s.Run("ok 2", func() {
 		g := grid{
 			boundaries: point.New(3, 3),
+			blocked:    make(map[point.Point]struct{}),
 		}
 		err := g.AddBlocked(point.New(1, 1), point.New(1, 2))
+		s.NoError(err)
+
+		s.Len(g.blocked, 2)
+	})
+
+	s.Run("ok flip 1", func() {
+		g := grid{
+			boundaries: point.New(3, 3),
+			blocked:    make(map[point.Point]struct{}),
+		}
+		err := g.AddBlocked(point.New(1, 2), point.New(1, 1))
+		s.NoError(err)
+
+		s.Len(g.blocked, 2)
+	})
+
+	s.Run("ok flip 2", func() {
+		g := grid{
+			boundaries: point.New(3, 3),
+			blocked:    make(map[point.Point]struct{}),
+		}
+		err := g.AddBlocked(point.New(2, 1), point.New(1, 1))
 		s.NoError(err)
 
 		s.Len(g.blocked, 2)
@@ -74,9 +91,6 @@ func (s *gridTestSuite) TestAddBlocked() {
 }
 
 func (s *gridTestSuite) TestIsFinish() {
-	ctrl := gomock.NewController(s.T())
-	defer ctrl.Finish()
-
 	g := &grid{
 		finish: point.New(1, 3),
 	}
@@ -86,9 +100,6 @@ func (s *gridTestSuite) TestIsFinish() {
 }
 
 func (s *gridTestSuite) TestIsLegalMove() {
-	ctrl := gomock.NewController(s.T())
-	defer ctrl.Finish()
-
 	g := &grid{
 		finish:     point.New(1, 2),
 		boundaries: point.New(3, 3),
