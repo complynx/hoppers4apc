@@ -116,7 +116,7 @@ To run this program, you need to:
 1. install go 1.19
 2. install all dependencies in go.mod
 3. run `go run ./cmd/main.go`
-4. provide input according to the briefing section
+4. provide input to sdtin according to the briefing section
 
 To further develop this program you may also want to install
 `github.com/vektra/mockery/v2`
