@@ -10,11 +10,17 @@ import (
 // the class that runs the simulation against
 // provided grid and hopper
 type BFSExecutor struct {
-	grid   pkg.Grid
+	// @property grid - The grid on which the simulation is run.
+	grid pkg.Grid
+	// @property hopper - The hopper that is being moved on the grid in the simulation.
 	hopper pkg.Hopper
 }
 
 // constructor without interesting parts
+//
+// @param grid - The grid on which the simulation is run.
+// @param hopper - The hopper that is being moved on the grid in the simulation.
+// @return pkg.BFSExecutor - A new instance of BFSExecutor.
 func NewBFSExecutor(grid pkg.Grid, hopper pkg.Hopper) pkg.BFSExecutor {
 	return &BFSExecutor{
 		grid:   grid,
@@ -23,12 +29,17 @@ func NewBFSExecutor(grid pkg.Grid, hopper pkg.Hopper) pkg.BFSExecutor {
 }
 
 // main function (at first was a pure function, then added this class)
+//
+// @return int - The number of moves needed to reach the finish, or 0 if no solution is found.
+// @return error - An error if one occurred during the simulation, or nil if the simulation ran successfully.
 func (b *BFSExecutor) BFS() (int, error) {
 	return bfs(b.grid, b.hopper)
 }
 
-// visited state saver. States could be different depending on their
-// velocity as well
+// A visitPoint is a state holder with position point.Point with a speed point.Point.
+//
+// @property position - The position of the visited state.
+// @property speed - The speed of the hopper in this state.
 type visitPoint struct {
 	position point.Point
 	speed    point.Point
@@ -38,6 +49,14 @@ type visitPoint struct {
 // first checks that the provided hopper stat isn't already in the
 // final position, or in the obstacles
 // then runs the BFS using simple queue and marking all visited points
+// We start with a hopper at a given position and speed, and we keep
+// trying to move the hopper in all
+// possible ways until we reach the finish, or we run out of moves
+//
+// @param grid - The grid on which the simulation is run.
+// @param hopper - The hopper that is being moved on the grid in the simulation.
+// @return int - The number of moves needed to reach the finish, or 0 if no solution is found.
+// @return error - An error if one occurred during the simulation, or nil if the simulation ran successfully.
 func bfs(grid pkg.Grid, hopper pkg.Hopper) (int, error) {
 	// check input conditions for sanity
 	if !grid.IsLegalMove(hopper.Position()) {

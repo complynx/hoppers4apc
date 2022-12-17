@@ -9,13 +9,21 @@ import (
 
 // this structure holds grid information and blocked positions
 type grid struct {
+	// boundaries is the size of the grid.
 	boundaries point.Point
-	blocked    map[point.Point]struct{}
-	finish     point.Point
+	// blocked is a map of blocked points in the grid.
+	blocked map[point.Point]struct{}
+	// finish is the ending point of the grid.
+	finish point.Point
 }
 
-// creates new grid of provided size with finish point
-// runs boundary checks and finish point checks
+// newGrid creates a new grid of the provided size with the finish point. It also
+// runs boundary and finish point checks.
+//
+// boundaries: the size of the grid.
+// finish: the ending point of the grid.
+//
+// Returns a new grid and an error if the grid could not be created.
 func newGrid(boundaries point.Point, finish point.Point) (pkg.Grid, error) {
 	// check boundaries for sanity
 	if boundaries.X < 1 || boundaries.Y < 1 {
@@ -36,8 +44,13 @@ func newGrid(boundaries point.Point, finish point.Point) (pkg.Grid, error) {
 	return ret, nil
 }
 
-// receives two points p1 and p2 and adds the rectangle bound by them to the blocked points
-// only if both points are inbound the grid
+// AddBlocked receives two points p1 and p2 and adds the rectangle bound by them to the blocked points
+// only if both points are inbound the grid.
+//
+// p1: the first point of the rectangle.
+// p2: the second point of the rectangle.
+//
+// Returns an error if one of the provided points is out of boundaries.
 func (g *grid) AddBlocked(p1, p2 point.Point) error {
 	// check if points are in the grid
 	if !g.IsInbound(p1) || !g.IsInbound(p2) {
@@ -62,12 +75,20 @@ func (g *grid) AddBlocked(p1, p2 point.Point) error {
 	return nil
 }
 
-// checks the point to be inside grid boundaries
+// IsInbound checks if the provided point is inside the grid boundaries.
+//
+// p: the point to be checked.
+//
+// Returns true if the point is inside the grid boundaries, false otherwise.
 func (g *grid) IsInbound(p point.Point) bool {
 	return p.X >= 0 && p.X < g.boundaries.X && p.Y >= 0 && p.Y < g.boundaries.Y
 }
 
-// checks the point to be inside boundaries and not blocked
+// IsLegalMove checks if the provided point is inside the boundaries and not blocked.
+//
+// p: the point to be checked.
+//
+// Returns true if the point is a legal move, false otherwise.
 func (g *grid) IsLegalMove(p point.Point) bool {
 	if !g.IsInbound(p) {
 		return false
@@ -77,7 +98,11 @@ func (g *grid) IsLegalMove(p point.Point) bool {
 	return !found
 }
 
-// checks if the point is finish point
+// IsFinish checks if the provided point is the finish point.
+//
+// p: the point to be checked.
+//
+// Returns true if the point is the finish point, false otherwise.
 func (g *grid) IsFinish(p point.Point) bool {
 	return p == g.finish
 }
