@@ -1,7 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"os"
 
+	"github.com/complynx/hoppers4apc/pkg/game"
+	"github.com/complynx/hoppers4apc/pkg/grid"
+	"github.com/complynx/hoppers4apc/pkg/hopper"
+)
+
+// Runs game from stdin to stdout without any other checks
 func main() {
-	fmt.Printf("test")
+	game.RunGame(os.Stdin, grid.NewFactory(), hopper.NewFactory(), os.Stdout)
 }

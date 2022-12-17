@@ -27,7 +27,7 @@ func (s *bfsTestSuite) TestBFSFunc() {
 		hopper.EXPECT().Position().Times(1).Return(point.New(0, 0))
 		grid.EXPECT().IsLegalMove(point.New(0, 0)).Return(false)
 
-		_, err := BFS(grid, hopper)
+		_, err := bfs(grid, hopper)
 		s.EqualError(err, "hopper starts out of bounds")
 	})
 	s.Run("hopper finish early", func() {
@@ -41,7 +41,7 @@ func (s *bfsTestSuite) TestBFSFunc() {
 		grid.EXPECT().IsLegalMove(point.New(0, 0)).Return(true)
 		grid.EXPECT().IsFinish(point.New(0, 0)).Return(true)
 
-		ret, err := BFS(grid, hopper)
+		ret, err := bfs(grid, hopper)
 		s.NoError(err)
 		s.Equal(1337, ret)
 	})
@@ -55,11 +55,12 @@ func (s *bfsTestSuite) TestBFSFunc() {
 		hopper.EXPECT().Position().Times(3).Return(point.New(0, 0))
 		grid.EXPECT().IsLegalMove(point.New(0, 0)).Return(true)
 		grid.EXPECT().IsFinish(point.New(0, 0)).Return(false)
+		hopper.EXPECT().Speed().Times(1).Return(point.New(0, 0))
 
 		// first hit
 		hopper.EXPECT().PossibleMoves().Times(1).Return([]pkg.Hopper{})
 
-		_, err := BFS(grid, hopper)
+		_, err := bfs(grid, hopper)
 		s.EqualError(err, "no solution found")
 	})
 	s.Run("hopper next hop is finish", func() {
@@ -72,6 +73,7 @@ func (s *bfsTestSuite) TestBFSFunc() {
 		hopper.EXPECT().Position().Times(3).Return(point.New(0, 0))
 		grid.EXPECT().IsLegalMove(point.New(0, 0)).Return(true)
 		grid.EXPECT().IsFinish(point.New(0, 0)).Return(false)
+		hopper.EXPECT().Speed().Times(1).Return(point.New(0, 0))
 
 		// first hit
 		hopper2 := mocks.NewHopper(s.T())
@@ -87,7 +89,7 @@ func (s *bfsTestSuite) TestBFSFunc() {
 		// exit
 		hopper2.EXPECT().CurrentMovesNumber().Times(1).Return(7357)
 
-		num, err := BFS(grid, hopper)
+		num, err := bfs(grid, hopper)
 		s.NoError(err)
 		s.Equal(7357, num)
 	})
@@ -101,6 +103,7 @@ func (s *bfsTestSuite) TestBFSFunc() {
 		hopper.EXPECT().Position().Times(3).Return(point.New(0, 0))
 		grid.EXPECT().IsLegalMove(point.New(0, 0)).Return(true)
 		grid.EXPECT().IsFinish(point.New(0, 0)).Return(false)
+		hopper.EXPECT().Speed().Times(1).Return(point.New(0, 0))
 
 		// first hit
 		hopper2 := mocks.NewHopper(s.T())
@@ -108,6 +111,7 @@ func (s *bfsTestSuite) TestBFSFunc() {
 		hopper.EXPECT().PossibleMoves().Times(1).Return([]pkg.Hopper{
 			hopper2,
 		})
+		hopper2.EXPECT().Speed().Times(1).Return(point.New(0, 0))
 
 		// first hop test
 		hopper2.EXPECT().Position().Times(1).Return(point.New(1, 2))
@@ -117,7 +121,7 @@ func (s *bfsTestSuite) TestBFSFunc() {
 		// no more hops added
 
 		// exit
-		_, err := BFS(grid, hopper)
+		_, err := bfs(grid, hopper)
 		s.EqualError(err, "no solution found")
 	})
 	s.Run("hopper next hop is visited", func() {
@@ -130,6 +134,7 @@ func (s *bfsTestSuite) TestBFSFunc() {
 		hopper.EXPECT().Position().Times(3).Return(point.New(0, 0))
 		grid.EXPECT().IsLegalMove(point.New(0, 0)).Return(true)
 		grid.EXPECT().IsFinish(point.New(0, 0)).Return(false)
+		hopper.EXPECT().Speed().Times(1).Return(point.New(0, 0))
 
 		// first hit
 		hopper2 := mocks.NewHopper(s.T())
@@ -137,6 +142,7 @@ func (s *bfsTestSuite) TestBFSFunc() {
 		hopper.EXPECT().PossibleMoves().Times(1).Return([]pkg.Hopper{
 			hopper2,
 		})
+		hopper2.EXPECT().Speed().Times(1).Return(point.New(0, 0))
 
 		// first hop test -> same position
 		hopper2.EXPECT().Position().Times(1).Return(point.New(0, 0))
@@ -145,7 +151,7 @@ func (s *bfsTestSuite) TestBFSFunc() {
 		// no more hops added
 
 		// exit
-		_, err := BFS(grid, hopper)
+		_, err := bfs(grid, hopper)
 		s.EqualError(err, "no solution found")
 	})
 	s.Run("hopper next hop is added to queue", func() {
@@ -158,6 +164,7 @@ func (s *bfsTestSuite) TestBFSFunc() {
 		hopper.EXPECT().Position().Times(3).Return(point.New(0, 0))
 		grid.EXPECT().IsLegalMove(point.New(0, 0)).Return(true)
 		grid.EXPECT().IsFinish(point.New(0, 0)).Return(false)
+		hopper.EXPECT().Speed().Times(1).Return(point.New(0, 0))
 
 		// first hit
 		hopper2 := mocks.NewHopper(s.T())
@@ -165,6 +172,7 @@ func (s *bfsTestSuite) TestBFSFunc() {
 		hopper.EXPECT().PossibleMoves().Times(1).Return([]pkg.Hopper{
 			hopper2,
 		})
+		hopper2.EXPECT().Speed().Times(2).Return(point.New(0, 0))
 
 		// first hop test
 		hopper2.EXPECT().Position().Times(1).Return(point.New(1, 2))
@@ -177,7 +185,7 @@ func (s *bfsTestSuite) TestBFSFunc() {
 		// fast exit, no more hits
 
 		// exit
-		_, err := BFS(grid, hopper)
+		_, err := bfs(grid, hopper)
 		s.EqualError(err, "no solution found")
 	})
 	s.Run("check that it's BFS not DFS", func() {
@@ -190,6 +198,7 @@ func (s *bfsTestSuite) TestBFSFunc() {
 		hopper.EXPECT().Position().Times(3).Return(point.New(0, 0))
 		grid.EXPECT().IsLegalMove(point.New(0, 0)).Return(true)
 		grid.EXPECT().IsFinish(point.New(0, 0)).Return(false)
+		hopper.EXPECT().Speed().Times(1).Return(point.New(0, 0))
 
 		// first hit - 2 hops, we need to get to the hop l1 p2 before hops l2*
 		hopl1p1 := mocks.NewHopper(s.T())
@@ -202,14 +211,18 @@ func (s *bfsTestSuite) TestBFSFunc() {
 
 		// hop l1 p1 test
 		hopl1p1.EXPECT().Position().Times(1).Return(point.New(1, 1))
+		hopl1p1.EXPECT().Speed().Times(1).Return(point.New(0, 0))
 		grid.EXPECT().IsFinish(point.New(1, 1)).Return(false)
 		grid.EXPECT().IsLegalMove(point.New(1, 1)).Return(true)
+		hopl1p1.EXPECT().Speed().Times(1).Return(point.New(0, 0))
 		// hop added
 
 		// hop l1 p2 test
 		hopl1p2.EXPECT().Position().Times(1).Return(point.New(1, 2))
+		hopl1p2.EXPECT().Speed().Times(1).Return(point.New(0, 0))
 		grid.EXPECT().IsFinish(point.New(1, 2)).Return(false)
 		grid.EXPECT().IsLegalMove(point.New(1, 2)).Return(true)
+		hopl1p2.EXPECT().Speed().Times(1).Return(point.New(0, 0))
 		// hop added
 
 		// taking from queue hop l1 p1
@@ -222,8 +235,10 @@ func (s *bfsTestSuite) TestBFSFunc() {
 
 		// hop l2 p1 test
 		hopl2p1.EXPECT().Position().Times(1).Return(point.New(2, 1))
+		hopl2p1.EXPECT().Speed().Times(1).Return(point.New(0, 0))
 		grid.EXPECT().IsFinish(point.New(2, 1)).Return(false)
 		grid.EXPECT().IsLegalMove(point.New(2, 1)).Return(true)
+		hopl2p1.EXPECT().Speed().Times(1).Return(point.New(0, 0))
 		// hop added
 		// hop l2 p1 should not be called further
 
@@ -243,8 +258,27 @@ func (s *bfsTestSuite) TestBFSFunc() {
 		hopl2p2.EXPECT().CurrentMovesNumber().Times(1).Return(2)
 
 		// check
-		num, err := BFS(grid, hopper)
+		num, err := bfs(grid, hopper)
 		s.NoError(err)
 		s.Equal(2, num)
+	})
+}
+
+func (s *bfsTestSuite) TestBFSCaller() {
+	s.Run("hopper start illegal", func() {
+		// prepare one of the cases for bfs
+		grid := mocks.NewGrid(s.T())
+		defer grid.Mock.AssertExpectations(s.T())
+		hopper := mocks.NewHopper(s.T())
+		defer hopper.Mock.AssertExpectations(s.T())
+
+		hopper.EXPECT().Position().Times(1).Return(point.New(0, 0))
+		grid.EXPECT().IsLegalMove(point.New(0, 0)).Return(false)
+
+		// create caller
+		caller := NewBFSExecutor(grid, hopper)
+
+		_, err := caller.BFS()
+		s.EqualError(err, "hopper starts out of bounds")
 	})
 }

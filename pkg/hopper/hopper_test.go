@@ -16,7 +16,7 @@ type hopperTestSuite struct {
 }
 
 func (s *hopperTestSuite) TestNew() {
-	h := New(point.New(1, 2))
+	h := newHopper(point.New(1, 2))
 	hReal, isHopper := h.(*hopper)
 
 	s.True(isHopper)
@@ -39,8 +39,19 @@ func (s *hopperTestSuite) TestPosition() {
 
 	s.Equal(h.Position(), point.New(1, 2))
 
-	h1 := New(point.New(2, 3))
+	h1 := newHopper(point.New(2, 3))
 	s.Equal(h1.Position(), point.New(2, 3))
+}
+
+func (s *hopperTestSuite) TestSpeed() {
+	h := hopper{
+		speed: point.New(1, 2),
+	}
+
+	s.Equal(h.Speed(), point.New(1, 2))
+
+	h1 := newHopper(point.New(2, 3))
+	s.Equal(h1.Speed(), point.New(0, 0))
 }
 
 func (s *hopperTestSuite) TestPossibleMoves() {
@@ -51,7 +62,7 @@ func (s *hopperTestSuite) TestPossibleMoves() {
 		}
 
 		possibleSteps := h.PossibleMoves()
-		s.Len(possibleSteps, 8)
+		s.Len(possibleSteps, 9)
 	})
 
 	s.Run("speed 1,0", func() {
@@ -61,7 +72,7 @@ func (s *hopperTestSuite) TestPossibleMoves() {
 		}
 
 		possibleSteps := h.PossibleMoves()
-		s.Len(possibleSteps, 8)
+		s.Len(possibleSteps, 9)
 	})
 
 	s.Run("speed 1,1", func() {
@@ -71,7 +82,7 @@ func (s *hopperTestSuite) TestPossibleMoves() {
 		}
 
 		possibleSteps := h.PossibleMoves()
-		s.Len(possibleSteps, 8)
+		s.Len(possibleSteps, 9)
 	})
 
 	s.Run("speed 1,2", func() {
@@ -116,7 +127,7 @@ func (s *hopperTestSuite) TestPossibleMoves() {
 }
 
 func (s *hopperTestSuite) TestMovesCount() {
-	h := New(point.New(1, 1))
+	h := newHopper(point.New(1, 1))
 	a := h.PossibleMoves()
 	s.Equal(0, h.CurrentMovesNumber())
 	s.Equal(1, a[0].CurrentMovesNumber())

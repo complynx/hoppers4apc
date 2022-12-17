@@ -132,6 +132,42 @@ func (_c *Hopper_PossibleMoves_Call) Return(_a0 []pkg.Hopper) *Hopper_PossibleMo
 	return _c
 }
 
+// Speed provides a mock function with given fields:
+func (_m *Hopper) Speed() point.Point {
+	ret := _m.Called()
+
+	var r0 point.Point
+	if rf, ok := ret.Get(0).(func() point.Point); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0).(point.Point)
+	}
+
+	return r0
+}
+
+// Hopper_Speed_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Speed'
+type Hopper_Speed_Call struct {
+	*mock.Call
+}
+
+// Speed is a helper method to define mock.On call
+func (_e *Hopper_Expecter) Speed() *Hopper_Speed_Call {
+	return &Hopper_Speed_Call{Call: _e.mock.On("Speed")}
+}
+
+func (_c *Hopper_Speed_Call) Run(run func()) *Hopper_Speed_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *Hopper_Speed_Call) Return(_a0 point.Point) *Hopper_Speed_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
 type mockConstructorTestingTNewHopper interface {
 	mock.TestingT
 	Cleanup(func())

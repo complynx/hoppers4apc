@@ -16,13 +16,22 @@ type gridTestSuite struct {
 }
 
 func (s *gridTestSuite) TestNew() {
+	s.Run("illegal bounds x", func() {
+		_, err := newGrid(point.New(0, 2), point.New(1, 2))
+		s.EqualError(err, "boundaries should be greater then 0")
+	})
+	s.Run("illegal bounds y", func() {
+		_, err := newGrid(point.New(1, 0), point.New(1, 2))
+		s.EqualError(err, "boundaries should be greater then 0")
+	})
+
 	s.Run("out of bounds", func() {
-		_, err := New(point.New(1, 2), point.New(1, 2))
+		_, err := newGrid(point.New(1, 2), point.New(1, 2))
 		s.EqualError(err, "finish point is outside grid boundaries provided")
 	})
 
 	s.Run("ok", func() {
-		g, err := New(point.New(3, 3), point.New(1, 2))
+		g, err := newGrid(point.New(3, 3), point.New(1, 2))
 		s.NoError(err)
 		s.NotNil(g)
 	})

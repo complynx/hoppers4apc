@@ -18,8 +18,9 @@ type hopper struct {
 
 /*
 Creates new stationary Hopper at the provided position
+with zero move count
 */
-func New(position point.Point) pkg.Hopper {
+func newHopper(position point.Point) pkg.Hopper {
 	return &hopper{
 		position: position,
 		speed:    point.New(0, 0),
@@ -40,29 +41,42 @@ func (h *hopper) Position() point.Point {
 	return h.position
 }
 
+// hopper speed getter
+func (h *hopper) Speed() point.Point {
+	return h.speed
+}
+
 // returns array of possible new states for hopper in the next move
-// if the position is the same, skips it
-// respects speed limit
+// respects speed limits
+// returned hopper states contain updated value for hops count
 func (h *hopper) PossibleMoves() []pkg.Hopper {
+	// create return array
 	ret := make([]pkg.Hopper, 0, maxPossibleMoves)
+
+	// 2d cycle over possible speed variations
 	for i := -accelerationLimit; i <= accelerationLimit; i++ {
 		for j := -accelerationLimit; j <= accelerationLimit; j++ {
+
+			// new speed variation
 			newSpeed := h.speed.Add(point.New(i, j))
+			// check for speed limits
 			if abs(newSpeed.X) <= speedLimit && abs(newSpeed.Y) <= speedLimit {
+				// new position according to speed
 				newPosition := h.position.Add(newSpeed)
-				if newPosition != h.position {
-					ret = append(ret, &hopper{
-						position: newPosition,
-						speed:    newSpeed,
-						moves:    h.moves + 1,
-					})
-				}
+
+				// add new state with increased number of moves
+				ret = append(ret, &hopper{
+					position: newPosition,
+					speed:    newSpeed,
+					moves:    h.moves + 1,
+				})
 			}
 		}
 	}
 	return ret
 }
 
+// returns current move count of the hopper
 func (h *hopper) CurrentMovesNumber() int {
 	return h.moves
 }

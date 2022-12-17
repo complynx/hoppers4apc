@@ -7,7 +7,28 @@ import (
 	"github.com/complynx/hoppers4apc/pkg/point"
 )
 
-func BFS(grid pkg.Grid, hopper pkg.Hopper) (int, error) {
+type BFSExecutor struct {
+	grid   pkg.Grid
+	hopper pkg.Hopper
+}
+
+func NewBFSExecutor(grid pkg.Grid, hopper pkg.Hopper) pkg.BFSExecutor {
+	return &BFSExecutor{
+		grid:   grid,
+		hopper: hopper,
+	}
+}
+
+func (b *BFSExecutor) BFS() (int, error) {
+	return bfs(b.grid, b.hopper)
+}
+
+type visitPoint struct {
+	position point.Point
+	speed    point.Point
+}
+
+func bfs(grid pkg.Grid, hopper pkg.Hopper) (int, error) {
 	if !grid.IsLegalMove(hopper.Position()) {
 		return 0, errors.New("hopper starts out of bounds")
 	}
@@ -16,8 +37,11 @@ func BFS(grid pkg.Grid, hopper pkg.Hopper) (int, error) {
 	}
 
 	queue := []pkg.Hopper{hopper}
-	visited := map[point.Point]struct{}{
-		hopper.Position(): {},
+	visited := map[visitPoint]struct{}{
+		{
+			position: hopper.Position(),
+			speed:    hopper.Speed(),
+		}: {},
 	}
 
 	for len(queue) > 0 {
@@ -30,9 +54,15 @@ func BFS(grid pkg.Grid, hopper pkg.Hopper) (int, error) {
 			if grid.IsFinish(nextPos) {
 				return nextHop.CurrentMovesNumber(), nil
 			}
-			_, alreadyVisited := visited[nextPos]
+			_, alreadyVisited := visited[visitPoint{
+				position: nextPos,
+				speed:    nextHop.Speed(),
+			}]
 			if !alreadyVisited && grid.IsLegalMove(nextPos) {
-				visited[nextPos] = struct{}{}
+				visited[visitPoint{
+					position: nextPos,
+					speed:    nextHop.Speed(),
+				}] = struct{}{}
 				queue = append(queue, nextHop)
 			}
 		}
