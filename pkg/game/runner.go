@@ -10,6 +10,11 @@ import (
 )
 
 // This function runs the main simulation, for test purposes all the inputs are mockable
+//
+// @param reader - An io.Reader that provides the input for the simulation.
+// @param gridFactory - A pkg.GridFactory that creates the grid for the simulation.
+// @param hopperFacctory - A pkg.HopperFactory that creates the hopper for the simulation.
+// @param writer - An io.Writer that receives the output of the simulation.
 func RunGame(
 	reader io.Reader,
 	gridFactory pkg.GridFactory,

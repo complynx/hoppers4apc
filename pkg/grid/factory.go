@@ -13,7 +13,12 @@ func NewFactory() pkg.GridFactory {
 	return &factory{}
 }
 
-// just creates a grid from received params
+// NewGrid creates a new grid from the received params.
+//
+// boundaries: the size of the grid.
+// finish: the ending point of the grid.
+//
+// Returns a new grid and an error if the grid could not be created.
 func (f *factory) NewGrid(boundaries point.Point, finish point.Point) (pkg.Grid, error) {
 	return newGrid(boundaries, finish)
 }
