@@ -8,12 +8,18 @@ import (
 // simple factory for mocking purposes
 type factory struct{}
 
-// just creates struct
+// NewFactory creates a new factory.
+//
+// Returns a new factory.
 func NewFactory() pkg.HopperFactory {
 	return &factory{}
 }
 
-// creates hopper using starting position
+// NewHopper creates a new hopper using the starting position.
+//
+// position: the starting position of the hopper.
+//
+// Returns a new hopper.
 func (f *factory) NewHopper(position point.Point) pkg.Hopper {
 	return newHopper(position)
 }

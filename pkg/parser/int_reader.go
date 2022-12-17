@@ -16,14 +16,17 @@ type intParser struct {
 	reader bufio.Reader
 }
 
-// creates a buffered reader and the int reader itself
+// NewIntReader creates a buffered reader and the int reader itself.
+// It takes an io.Reader as an argument and returns a pkg.IntReader.
 func NewIntReader(r io.Reader) pkg.IntReader {
 	return &intParser{
 		reader: *bufio.NewReader(r),
 	}
 }
 
-// supplementary function to get some number of integers on a line separated by some spaces
+// getFields is a supplementary function that gets some number of integers on a line separated by some spaces.
+// It reads a line from the input stream, splits it into word chunks, and parses each chunk to int.
+// It returns an array of integers and an error if there was any problem with the conversion.
 func (p *intParser) getFields() ([]int, error) {
 	// get the line
 	line, err := p.reader.ReadString('\n')
@@ -45,7 +48,9 @@ func (p *intParser) getFields() ([]int, error) {
 	return ret, nil
 }
 
-// reads line from input stream and expects one integer there
+// GetOne reads a line from the input stream and expects one integer there.
+// It returns the integer and an error if there was a problem with the
+// conversion or if there was not exactly one integer in the line.
 func (p *intParser) GetOne() (int, error) {
 	line, err := p.getFields()
 	if err != nil {
@@ -57,7 +62,9 @@ func (p *intParser) GetOne() (int, error) {
 	return line[0], nil
 }
 
-// reads line from input stream and expects two integers there
+// GetCouple reads a line from the input stream and expects two integers there.
+// It returns the two integers and an error if there was a problem with the
+// conversion or if there were not exactly two integers in the line.
 func (p *intParser) GetCouple() (int, int, error) {
 	line, err := p.getFields()
 	if err != nil {
@@ -69,7 +76,9 @@ func (p *intParser) GetCouple() (int, int, error) {
 	return line[0], line[1], nil
 }
 
-// reads line from input stream and expects four integers there
+// GetFour reads a line from the input stream and expects four integers there.
+// It returns the four integers and an error if there was a problem with the
+// conversion or if there were not exactly four integers in the line.
 func (p *intParser) GetFour() (int, int, int, int, error) {
 	line, err := p.getFields()
 	if err != nil {

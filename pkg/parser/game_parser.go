@@ -14,7 +14,13 @@ type gameParser struct {
 	hopperFactory pkg.HopperFactory
 }
 
-// noop constructor
+// NewGameParser creates a new game parser.
+//
+// reader: an IntReader that reads integers from an input source.
+// gridFactory: a GridFactory that creates grids.
+// hopperFactory: a HopperFactory that creates hoppers.
+//
+// Returns a new game parser.
 func NewGameParser(reader pkg.IntReader, gridFactory pkg.GridFactory, hopperFactory pkg.HopperFactory) pkg.GameParser {
 	return &gameParser{
 		reader:        reader,
@@ -23,8 +29,10 @@ func NewGameParser(reader pkg.IntReader, gridFactory pkg.GridFactory, hopperFact
 	}
 }
 
-// this function reads the input and creates game board and the beginning state of the hopper
-// initialized with the input data
+// SetupGame reads the input and creates a game board and the beginning state of the hopper,
+// initialized with the input data.
+//
+// Returns a game board, a hopper, and an error if there was an issue setting up the game.
 func (p *gameParser) SetupGame() (pkg.Grid, pkg.Hopper, error) {
 	// receive width and height
 	width, height, err := p.reader.GetCouple()
