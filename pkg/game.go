@@ -1,12 +1,6 @@
 package pkg
 
-//go:generate mockery --srcpkg github.com/complynx/hoppers4apc/pkg --name=Hopper --with-expecter
-//go:generate mockery --srcpkg github.com/complynx/hoppers4apc/pkg --name=Grid --with-expecter
-//go:generate mockery --srcpkg github.com/complynx/hoppers4apc/pkg --name=BFSExecutor --with-expecter
-//go:generate mockery --srcpkg github.com/complynx/hoppers4apc/pkg --name=HopperFactory --with-expecter
-//go:generate mockery --srcpkg github.com/complynx/hoppers4apc/pkg --name=GridFactory --with-expecter
-//go:generate mockery --srcpkg github.com/complynx/hoppers4apc/pkg --name=IntReader --with-expecter
-//go:generate mockery --srcpkg github.com/complynx/hoppers4apc/pkg --name=GameParser --with-expecter
+//go:generate mockery --srcpkg github.com/complynx/hoppers4apc/pkg --all --with-expecter
 
 import (
 	"github.com/complynx/hoppers4apc/pkg/point"
